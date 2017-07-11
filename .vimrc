@@ -1,9 +1,10 @@
 " 定义快捷键的前缀，即 <Leader>
-let mapleader=";"
+let mapleader="\<Space>"
+" let mapleader=";"
 
 " >>>=========文件类型侦测============
 " 文件类型侦测
-
+set fileencodings=utf-8,gbk,ucs-bom,cp936 
 filetype on         " 开启文件类型侦测
 filetype plugin on  " 根据侦测到的不同类型加载对应的插件
 
@@ -14,8 +15,12 @@ filetype plugin on  " 根据侦测到的不同类型加载对应的插件
 " >>>=========vim 自身（非插件）快捷键============
 " 
 
-nmap LB 0     " 定义快捷键到行首 / “)” 页尾
-nmap LE $     " 定义快捷键到行尾
+" Go to home and end using capitalized directions
+noremap H ^
+noremap L $
+
+ " nmap LB 0     " 定义快捷键到行首 / “)” 页尾
+ " nmap LE $     " 定义快捷键到行尾
 
 vnoremap <Leader>y "+y        " 设置快捷键将选中文本块复制至系统剪贴板
 nnoremap <Leader>p "+p            " 设置快捷键将系统剪贴板内容粘贴至vim
@@ -24,6 +29,7 @@ nnoremap <Leader>q :q<CR>         " 定义快捷键关闭当前分割窗口
 nnoremap <Leader>w :w<CR>         " 定义快捷键保存当前窗口内容
 nnoremap <Leader>WQ :wa<CR>:q<CR> " 定义快捷键保存所有窗口内容并退出 vim
 nnoremap <Leader>Q :qa!<CR>       " 不做任何保存，直接退出 vim
+
 
 " 设置快捷键遍历子窗口
 nnoremap nw <C-W><C-W>        " 依次遍历
@@ -39,6 +45,15 @@ nmap <Leader>M %              " 定义快捷键在结对符之间跳转
 
 " 让配置变更立即生效
 autocmd BufWritePost $MYVIMRC source $MYVIMRC
+" normal模式下，自动切换到英文输入法
+autocmd InsertLeave * call Fcitx2en()
+function! Fcitx2en()
+    let s:input_status=system("fcitx-remote")
+    if s:input_status==2
+        let g:input_toggle=1
+        let l:a=system("fcitx-remote -c")
+    endif
+endfunction
 
 
 
@@ -69,19 +84,21 @@ filetype off
 " 制定插件安装目录 (for Neovim: ~/.local/share/nvim/plugged)
 call plug#begin('~/.vim/plugged')
 
+"js  补全插件
+Plug 'ternjs/tern_for_vim'
 
 " >>> 配色方案" 
 " Plug 'altercation/vim-colors-solarized'
-Plug 'tomasr/molokai'
+" Plug 'tomasr/molokai'
 " Plug 'vim-scripts/phd'
 
 
 " 美化状态栏
-" Plug 'Lokaltog/vim-powerline'
+"Plug 'Lokaltog/vim-powerline'
 
 " 美化状态栏 和 主题
-Plug 'vim-airline/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
+"Plug 'vim-airline/vim-airline'
+"Plug 'vim-airline/vim-airline-themes'
 
 " C++ 语法高亮支持
 " Plug 'octol/vim-cpp-enhanced-highlight'
@@ -92,8 +109,13 @@ Plug 'vim-airline/vim-airline-themes'
 " 支持大多数语言代码高亮
 Plug 'sheerun/vim-polyglot'
 
+"快速给词加环绕符号,例如单引号/双引号/括号/成对标签等
+Plug 'tpope/vim-surround'
 " 文件搜索
 Plug 'wincent/command-t'
+
+"自动补全
+Plug 'Raimondi/delimitMate'
 
 " 下面这个插件可取代Command-T 但是现在暂时不支持目录忽略，所以先暂时不用
 " 还有就是安装下载不下来啊
@@ -114,7 +136,7 @@ Plug 'kshenoy/vim-signature'
 Plug 'airblade/vim-gitgutter'
 
 " 解决中文输入法下面无法使用命令
-Plug 'ybian/smartim'
+" Plug 'ybian/smartim'
 
 " 它可以让书签行高亮
 Plug 'vim-scripts/BOOKMARKS--Mark-and-Highlight-Full-Lines'
@@ -175,6 +197,8 @@ Plug 'Lokaltog/vim-easymotion'
 " 中/英输入平滑切换
 " Plug 'lilydjwg/fcitx.vim'
 
+" Java自动不全工具
+Plug 'artur-shaik/vim-javacomplete2'
 " 语法高亮多种知名JS库
 Plug 'othree/javascript-libraries-syntax.vim'
 
@@ -194,17 +218,21 @@ call plug#end()            " 插件列表结束
 filetype plugin indent on  " 根据侦测到的不同类型加载对应的插件
 " <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
+autocmd FileType java setlocal omnifunc=javacomplete#Complete
+
 " >>>>>>>>>>
 " 配色方案
 " 
-set background=dark
+
+set background=light
+colorscheme default
 " 素雅 solarized
 " Plug 'altercation/vim-colors-solarized'
 " colorscheme solarized
 
 " 多彩 molokai
-" Plug 'tomasr/molokai' 
-colorscheme molokai
+" Plug 'tomasr/molokai'
+" colorscheme molokai
 
 " 复古 phd
 " Plug 'tomasr/molokai' 
@@ -246,16 +274,17 @@ autocmd VimEnter * call ToggleFullscreen()
  
 set laststatus=2   " 总是显示状态栏
 set ruler          " 显示光标当前位置
+" set relativenumber
 set number         " 开启行号显示
                    " 显示绝对行号      set number
                    " 取消显示绝对行号   set nonumber
                    " 显示相对行号       set relativenumber
                    " 取消显示相对行号   set norelativenumber
 
-set cursorline    " 高亮显示当前 - 行
-set cursorcolumn  " 高亮显示当前 - 列
+" set cursorline    " 高亮显示当前 - 行
+"set cursorcolumn  " 高亮显示当前 - 列
 set hlsearch      " 高亮显示搜索结果
-" set nocompatible  " 不要使用vi的键盘模式，而是vim自己的 
+set nocompatible  " 不要使用vi的键盘模式，而是vim自己的
 " set encoding=utf-8
 
 " 在处理未保存或只读文件的时候，弹出确认 
@@ -269,12 +298,19 @@ set confirm
 " 其他美化
 
 " 设置 gvim 显示字体
-" set guifont=YaHei\ Consolas\ Hybrid\ 10.5
+"set guifont=YaHei\ Consolas\ Hybrid\ 10.5
 " set guifont=Liberation\ Mono\ for\ Powerline\ 10 
-set guifont=Source\ Code\ Pro\ for\ Powerline:h16 
+"set guifont=Source\ Code\ Pro\ for\ Powerline:h16 
+set guifont=Monospace\ 12
 
-
-set nowrap " 禁止折行
+set wrap "自动折行
+" set nowrap " 禁止折行
+" "Treat long lines as break lines (useful when moving around in them)
+" 把长的物理行当中展示行移动光标
+nnoremap k gk
+nnoremap gk k
+nnoremap j gj
+nnoremap gj j
 
 
 " Plug 'Lokaltog/vim-powerline'
@@ -603,7 +639,8 @@ set completeopt-=preview
 let g:ycm_min_num_of_chars_for_completion=1
 
 " 禁止缓存匹配项，每次都重新生成匹配项
-let g:ycm_cache_omnifunc=0
+" 这个选项会导致补全列表排序不正确
+" let g:ycm_cache_omnifunc=0
 
 " 语法关键字补全
 let g:ycm_seed_identifiers_with_syntax=1
@@ -753,6 +790,25 @@ let g:wildfire_objects = ["i'", 'i"', "i)", "i]", "i}", "i>", "ip"]
 
 " <<<<<<<<<<
 
+" <Leader>f{char} to move to {char}
+map  <Leader><Leader>f <Plug>(easymotion-bd-f)
+nmap <Leader><Leader>f <Plug>(easymotion-overwin-f)
+
+" s{char}{char} to move to {char}{char}
+nmap s <Plug>(easymotion-overwin-f2)
+
+" Move to line
+map <Leader><Leader>l <Plug>(easymotion-bd-jk)
+nmap <Leader><Leader>l <Plug>(easymotion-overwin-line)
+
+" Move to word
+map  <Leader><Leader>w <Plug>(easymotion-bd-w)
+nmap <Leader><Leader>w <Plug>(easymotion-overwin-w)
+" easymotion highlight colors
+hi link EasyMotionTarget Search
+hi link EasyMotionTarget2First Search
+hi link EasyMotionTarget2Second Search
+hi link EasyMotionShade Comment
 
 " >>>>>>>>>>
 " 让你有机会撤销最近一步或多步操作
@@ -761,7 +817,3 @@ let g:wildfire_objects = ["i'", 'i"', "i)", "i]", "i}", "i>", "ip"]
 nnoremap <Leader>ud :GundoToggle<CR>
 
 " <<<<<<<<<<
-
-
-
-

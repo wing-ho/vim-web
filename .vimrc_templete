@@ -1,0 +1,18 @@
+"set shortmess=atI
+set nu
+set relativenumber
+set smarttab
+set tabstop=2
+set shiftwidth=2
+set expandtab
+set autoindent
+
+call plug#begin('~/.vim/plugged')
+Plug 'Valloric/YouCompleteMe'
+Plug 'artur-shaik/vim-javacomplete2'
+call plug#end()            " 插件列表结束
+filetype plugin indent on  " 根据侦测到的不同类型加载对应的插件
+
+syntax on
+"let g:ycm_global_ycm_extra_conf = "~/.vim/.ycm_extra_conf.py"
+autocmd FileType java setlocal omnifunc=javacomplete#Complete

@@ -2,10 +2,10 @@
 ![vim-web](./vim-web-logo.png)
 
 ----
-tested on 
-Mac OSx
-Arch Linux on PC
-Debian Jessie on Boox M96
+Tested on
+- Mac OSx
+- Arch Linux on PC
+- Debian Jessie on Boox M96
 
 <img align="center" src="./vim-web.gif">
 <img align="center" src="./vim-java.png">

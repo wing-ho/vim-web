@@ -457,7 +457,8 @@ let g:SignatureMap = {
 " 需要安装ctags `brew install ctags`
 " 安装ctags 之后签列表子窗口才能出现
 
-let tagbar_left=1                      " 设置 tagbar 子窗口的位置出现在主编辑区的左边
+" let tagbar_left=1                      " 设置 tagbar 子窗口的位置出现在主编辑区的左边
+let tagbar_right=1                      " 设置 tagbar 子窗口的位置出现在主编辑区的右边
 let tagbar_width=32                    " 设置标签子窗口的宽度
 let g:tagbar_compact=1                 " tagbar 子窗口中不显示冗余帮助信息
 nnoremap <Leader>ilt :TagbarToggle<CR> " 设置显示／隐藏标签列表子窗口的快捷键。速记：identifier list by tag

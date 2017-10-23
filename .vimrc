@@ -14,6 +14,7 @@ filetype plugin on  " 根据侦测到的不同类型加载对应的插件
 
 " >>>=========vim 自身（非插件）快捷键============
 " 
+:imap jk <Esc>:w<Enter>
 
 " Go to home and end using capitalized directions
 noremap H ^
